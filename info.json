@@ -1,10 +1,10 @@
 {
-  "name": "[internal-mod-name]",
+  "name": "inventory-gauge",
   "version": "0.0.0",
-  "title": "[MOD DISPLAY NAME]",
-  "author": "[YOUR MODS.FACTORIO.COM USERNAME]",
-  "homepage": "[HOMEPAGE/REPO URL]",
-  "description": "[SHORT DESCRIPTION]",
+  "title": "Inventory Gauge",
+  "author": "timspeedle",
+  "homepage": "https://github.com/timspeedle/inventory-gauge",
+  "description": "A mod that shows a moveable gauge of your inventory capacity on the screen.",
   "factorio_version": "2.0",
   "dependencies": [
     "base"

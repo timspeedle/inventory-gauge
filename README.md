@@ -1,83 +1,92 @@
-[![Release](https://github.com/fgardt/factorio-mod-template/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/fgardt/factorio-mod-template/actions/workflows/release.yml)
-<!--                           ^======[REPLACE THIS]======^                                                                          ^======[REPLACE THIS]======^  -->
+# Inventory UI
 
-# factorio-mod-template
+A Factorio mod that adds a toggleable dialog box with a progress bar showing how full your inventory is.
 
-A small Factorio Mod template which also contains GitHub Actions for automatic changelog generation, packaging and releasing to the [Factorio Mod Portal](https://mods.factorio.com)
+## Features
 
-# How it works
+- **Real-time Inventory Tracking**: Visual progress bar showing current inventory capacity
+- **Toggleable UI**: Show or hide the inventory display with a simple button click
+- **Customizable Settings**: Configure the mod to suit your preferences
+- **Factorio 2.0 Compatible**: Built for the latest version of Factorio
 
-This template uses [semantic-release](https://github.com/semantic-release/semantic-release) to automate the changelog generation aswell as packaging and releasing of the mod. \
-To achieve this it analyzes your commit messages to figure out what the new version should be and what to put into the changelog.
-Packaging and releasing to the factorio mod portal is done with [this plugin](https://github.com/fgardt/semantic-release-factorio). \
-Additionally the GitHub Action will also create a release in your repository on GitHub itself.
+## Installation
 
-Once you push new commits to the main branch the release action will trigger. \
-First it will analyze all commits since the last release (determined from the last tag) to figure out if a new version should be released and what version it should be. \
-To make this possible you need to follow a commit message convention. The default convention this template uses is [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) with the following types:
+### Via Factorio Mod Portal (Recommended)
+1. Open Factorio
+2. Go to the Mods menu
+3. Search for "Inventory UI"
+4. Click "Download" and enable the mod
 
-| Commit type                 | Changelog section |
-| --------------------------- | ----------------- |
-| `feat` or `feature`         | `Features`        |
-| `fix`                       | `Bugfixes`        |
-| `perf` or `performance`     | `Optimizations`   |
-| `compat` or `compatibility` | `Compatibility`   |
-| `balance`                   | `Balancing`       |
-| `graphics`                  | `Graphics`        |
-| `sound`                     | `Sounds`          |
-| `gui`                       | `Gui`             |
-| `info`                      | `Info`            |
-| `locale`                    | `Locale`          |
-| `translate`                 | `Translation`     |
-| `control`                   | `Control`         |
-| `other`                     | `Changes`         |
+### Manual Installation
+1. Download the latest release from the [Releases page](https://github.com/timspeedle/inventory-gauge/releases)
+2. Extract the zip file to your Factorio mods folder:
+   - **Windows**: `%AppData%\Factorio\mods`
+   - **macOS**: `~/Library/Application Support/factorio/mods`
+   - **Linux**: `~/.factorio/mods`
+3. Restart Factorio and enable the mod in the Mods menu
 
-Because a push to the main branch triggers the release action it is recommended to work on a separate branch until your work is done and then merge that branch into main to release it. \
-_Or you just work locally and if you want to release you push your changes to main, up to you how you want to do it ;)_
+## Usage
 
-# How to use
+1. Start or load a game
+2. Click the toggle button to show/hide the inventory display
+3. The progress bar updates in real-time as you collect or use items
 
-## Repository setup
+## Configuration
 
-Click the `Use this template` button and create your own repository.
+Access mod settings through:
+- Main Menu → Settings → Mod Settings
+- In-game → Settings → Mod Settings
 
-Once you have your new repository you need to add a Factorio token as a GitHub Actions secret so that the mod releasing can work. \
-To get the token go to [Factorio's website](https://factorio.com/login) and login with your account. \
-Then you need to go to your [profile](https://factorio.com/profile) and generate a new API key. \
-The API key needs `Upload Mods`, `Publish Mods` and `Edit Mods` permissions. Copy the generated key.
+### Overlay Format Tokens
 
-Now you need to go to your repository settings > `Secrets and variables` > `Actions` and add a new Repository secret called `FACTORIO_TOKEN` with your copied key as the secret.
+The `inventory-gauge-overlay-format` setting lets you customize the text label shown over the segmented inventory bar. Use placeholder tokens to insert dynamic values:
 
-## Mod setup
+Tokens:
+- `%F` Full stacks (slots at max stack size)
+- `%P` Partial stacks (slots containing items but not full)
+- `%U` Used (non-empty) slots = full + partial
+- `%R` Reserved (filtered) empty slots
+- `%E` Free empty slots (unreserved and empty)
+- `%T` Total inventory slots
+- `%I` Percent of slots containing items (rounded)
+- `%%` Literal percent sign
 
-- Swap out the [`LICENSE`](LICENSE) to your own liking _**(especially change out my name for yours)**_
-- Populate the [`info.json`](info.json) file with correct values _(the `version` field gets updated automatically)_
-- Add the corresponding text into [`locale.cfg`](locale/en/locale.cfg)
-- Add a `thumbnail.png` to the root of the repository
+Example template (default):
 
-More details about a mods structure can be found in the [documentation](https://lua-api.factorio.com/latest/auxiliary/mod-structure.html).
-
-# Misc
-
-## How the packaging works
-
-The [`semantic-release-factorio` plugin](https://github.com/fgardt/semantic-release-factorio) uses the `git archive` command to package the mod. \
-That way you can specify what folders / files to exclude from your packaged mod by specifying them in [`.gitattributes`](.gitattributes).
-
-If you want to locally test packaging of your mod you can run the following command:
-```sh
-git archive --format zip --prefix [YOUR-MOD-NAME]/ --worktree-attributes --output [YOUR-MOD-NAME]_[VERSION].zip HEAD
+```
+%I%% full (%E empty)
 ```
 
-## Changing the commit message convention
+If an unknown token is referenced (e.g. `%X`), it is left as-is.
 
-If you want to change the commit message convention you can do so by changing the 2 `preset` fields in the [`.releaserc`](.releaserc) file. \
-Possible presets are: [`angular`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular), [`atom`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-atom), [`codemirror`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-codemirror), [`ember`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-ember), [`eslint`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-eslint), [`express`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-express), [`jquery`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-jquery), [`jshint`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-jshint), [`conventionalcommits`](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-conventionalcommits).
+## Contributing
 
-Additionally you also need to modify the worflow file [`.github/workflows/release.yml`](.github/workflows/release.yml) to use the package that corresponds to your chosen preset. \
-Replace `conventional-changelog-conventionalcommits` with `conventional-changelog-[YOUR PRESET]` accordingly.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## Need help?
+## License
 
-Checkout the [official Factorio Discord](https://discord.gg/factorio) and check the `#mod-dev-guide` channel. \
-There is also the [Lua API documentation](https://lua-api.factorio.com/latest/) and the [modding section in the wiki](https://wiki.factorio.com/Modding).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/timspeedle/inventory-gauge/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/timspeedle/inventory-gauge/discussions)
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes in each version.
+
+## Author
+
+**timspeedle**
+
+## Acknowledgments
+
+- Thanks to the Factorio development team for creating an amazing modding API
+- Thanks to all contributors and users of this mod
+
+## AI Usage Disclaimer
+
+Generative AI technology has been used in the creation of this mod. Code, graphics,
+localization, and other components of this mod may have been created and/or improved
+upon by generative AI.
