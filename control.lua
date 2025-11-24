@@ -77,6 +77,15 @@ local function format_overlay(player, full, partial, reserved, total)
   return result
 end
 
+-- Function to destroy the dialog
+local function destroy_dialog(player)
+  storage.dialog_auto_hide = storage.dialog_auto_hide or {}
+  if player.gui.screen.inventory_dialog then
+    player.gui.screen.inventory_dialog.destroy()
+  end
+  storage.dialog_visible[player.index] = false
+end
+
 local function update_progress_bar(player)
     local dialog = player.gui.screen.inventory_dialog
     if not dialog then
@@ -100,6 +109,12 @@ local function update_progress_bar(player)
       return
     end
     local full, partial, total, reserved = get_inventory_fullness(player)
+    if total == 0 then
+      debug_log("No inventory found for player " .. player.name .. ", hiding dialog")
+      destroy_dialog(player)
+      storage.dialog_auto_hide[player.index] = true
+      return
+    end
     local overlay_caption = format_overlay(player, full, partial, reserved, total)
     local seg_container = flow.inventory_segments
     if seg_container then
@@ -148,15 +163,10 @@ local function create_dialog(player)
   
   -- Add segmented bar (full / partial / reserved / free)
   create_segmented_inventory_bar(flow, full, partial, reserved, total, player)
+
+  storage.dialog_visible[player.index] = true
   
   return frame
-end
-
--- Function to destroy the dialog
-local function destroy_dialog(player)
-  if player.gui.screen.inventory_dialog then
-    player.gui.screen.inventory_dialog.destroy()
-  end
 end
 
 -- Function to toggle the dialog
@@ -175,11 +185,9 @@ local function toggle_dialog(player)
       end
     end
     destroy_dialog(player)
-    storage.dialog_visible[player_index] = false
   else
     -- Dialog is hidden, show it
     create_dialog(player)
-    storage.dialog_visible[player_index] = true
   end
 end
 
@@ -236,10 +244,19 @@ end)
 script.on_nth_tick(60, function()
   if not storage.dialog_visible then return end
   for player_index, visible in pairs(storage.dialog_visible) do
-    if visible then
-      local player = game.get_player(player_index)
-      if player then
+    local player = game.get_player(player_index)
+    if player then
+      if visible then
         update_progress_bar(player)
+      else
+        debug_log("Player " .. player.name .. " has dialog hidden, checking for auto-show: " .. tostring(storage.dialog_auto_hide and storage.dialog_auto_hide[player_index]))
+        if storage.dialog_auto_hide and storage.dialog_auto_hide[player_index] == true then
+          local inventory = player.get_main_inventory()
+          if inventory then
+            create_dialog(player)
+            storage.dialog_auto_hide[player_index] = nil
+          end
+        end
       end
     end
   end
