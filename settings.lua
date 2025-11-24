@@ -3,7 +3,7 @@ data:extend({
   {
     type = "color-setting",
     name = "inventory-gauge-occupied",
-    setting_type = "startup",
+    setting_type = "runtime-per-user",
     default_value = {r=1, g=0.18, b=0.05, a=0.88},
     order = "color-a"
   },
@@ -12,7 +12,7 @@ data:extend({
   {
     type = "color-setting",
     name = "inventory-gauge-partial",
-    setting_type = "startup",
+    setting_type = "runtime-per-user",
     default_value = {r=1, g=1, b=0.05, a=0.69},
     order = "color-b"
   },
@@ -21,7 +21,7 @@ data:extend({
   {
     type = "color-setting",
     name = "inventory-gauge-reserved",
-    setting_type = "startup",
+    setting_type = "runtime-per-user",
     default_value = {r=0.05, g=0.65, b=1, a=0.71},
     order = "color-c"
   },
@@ -30,7 +30,7 @@ data:extend({
   {
     type = "color-setting",
     name = "inventory-gauge-free",
-    setting_type = "startup",
+    setting_type = "runtime-per-user",
     default_value = {r=0.05, g=0.95, b=0.35, a=0.73},
     order = "color-d"
   },
@@ -39,7 +39,7 @@ data:extend({
   {
     type = "color-setting",
     name = "inventory-gauge-text",
-    setting_type = "startup",
+    setting_type = "runtime-per-user",
     default_value = {r=0.0, g=0.0, b=0.0},
     order = "color-z"
   },

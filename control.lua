@@ -294,14 +294,18 @@ end)
 -- Constants and helpers for segmented bar
 local BAR_WIDTH = 200
 
-function build_segment(parent, name, width, style_name, tooltip)
+function build_segment(parent, name, width, tooltip, color)
   local seg = parent.add{
-    type = "empty-widget",
+    type = "progressbar",
     name = name,
-    style = style_name
+    style = "inv_bar_segment",
+    value = 1.0
   }
+  seg.style.padding = 0
+  seg.style.margin = 0
   seg.style.width = width
-  seg.style.height = 16
+  seg.style.height = 20
+  seg.style.color = color
   seg.tooltip = tooltip
   return seg
 end
@@ -315,17 +319,26 @@ function create_segmented_inventory_bar(flow, full, partial, reserved, total, pl
   }
   container.style.horizontal_spacing = 0
   container.style.vertically_stretchable = false
+  
+  -- Get colors from player settings
+  local occupied_color = player.mod_settings["inventory-gauge-occupied"].value
+  local partial_color = player.mod_settings["inventory-gauge-partial"].value
+  local reserved_color = player.mod_settings["inventory-gauge-reserved"].value
+  local free_color = player.mod_settings["inventory-gauge-free"].value
+  local text_color = player.mod_settings["inventory-gauge-text"].value
+  
   local free = math.max(total - full - partial - reserved, 0)
   local full_w = total > 0 and math.floor(BAR_WIDTH * full / total + 0.5) or 0
   local partial_w = total > 0 and math.floor(BAR_WIDTH * partial / total + 0.5) or 0
   local res_w = total > 0 and math.floor(BAR_WIDTH * reserved / total + 0.5) or 0
   local free_w = BAR_WIDTH - full_w - partial_w - res_w
-  if full_w > 0 then build_segment(container, "seg_full", full_w, "inv_bar_segment_full", full .. " full stacks") end
-  if partial_w > 0 then build_segment(container, "seg_partial", partial_w, "inv_bar_segment_partial", partial .. " partial stacks") end
-  if res_w > 0 then build_segment(container, "seg_reserved", res_w, "inv_bar_segment_reserved", reserved .. " reserved (filtered)") end
-  if free_w > 0 then build_segment(container, "seg_free", free_w, "inv_bar_segment_free", free .. " free") end
+  if full_w > 0 then build_segment(container, "seg_full", full_w, full .. " full stacks", occupied_color) end
+  if partial_w > 0 then build_segment(container, "seg_partial", partial_w, partial .. " partial stacks", partial_color) end
+  if res_w > 0 then build_segment(container, "seg_reserved", res_w, reserved .. " reserved (filtered)", reserved_color) end
+  if free_w > 0 then build_segment(container, "seg_free", free_w, free .. " free", free_color) end
   local overlay_caption = player and format_overlay(player, full, partial, reserved, total) or ("F " .. full .. " P " .. partial .. " / " .. total .. " (R " .. reserved .. ")")
   local overlay = container.add{ type = "label", name = "inventory_segments_label", caption = overlay_caption, style = "inv_bar_text" }
+  overlay.style.font_color = text_color
   overlay.style.left_margin = -BAR_WIDTH -- pull back to start
   overlay.style.width = BAR_WIDTH
   overlay.style.horizontal_align = "center"
