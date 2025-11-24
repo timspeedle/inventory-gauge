@@ -9,10 +9,25 @@ end)
 
 -- Function to calculate inventory fullness
 local function get_inventory_fullness(player)
-  local inventory = player.get_main_inventory()
+  -- Check if player is in a vehicle and use vehicle inventory if so
+  local inventory
+  if player.vehicle then
+    inventory = player.vehicle.get_inventory(defines.inventory.car_trunk)
+    if not inventory then
+      -- Try spider vehicle inventory
+      inventory = player.vehicle.get_inventory(defines.inventory.spider_trunk)
+    end
+  end
+  
+  -- Fall back to player's main inventory if no vehicle or vehicle has no inventory
+  if not inventory then
+    inventory = player.get_main_inventory()
+  end
+  
   if not inventory then
     return 0, 0, 0, 0
   end
+  
   local total_slots = #inventory
   local full_slots = 0
   local partial_slots = 0
