@@ -83,6 +83,11 @@ local function update_progress_bar(player)
       debug_log("ERROR: Dialog not found for player " .. player.name)
       return
     end
+    -- Store the current position before updating, so it can be restored on next open if needed
+    if dialog and dialog.valid and dialog.location then
+      storage.window_positions = storage.window_positions or {}
+      storage.window_positions[player.index] = {x = dialog.location.x, y = dialog.location.y}
+    end
     local flow = nil
     for _, child in pairs(dialog.children) do
       if child.type == "flow" then
