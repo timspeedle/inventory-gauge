@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 2025-11-24
+  Features:
+    - Convert UI to use progressbar and move mod color-settings to per-user. The colors are now more accurate to the actually picked colors. Thanks to Shemp for the advice
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2025-11-24
   Features:
