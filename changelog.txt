@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2025-11-24
+  Features:
+    - Auto-hide the window when in remote view mode and player inventory is not available
+    - If the player is in a vehicle, then update the bar based on the vehicle's inventory, not the player's
+  Bugfixes:
+    - Save the dialog location properly
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2025-11-17
   Features:
