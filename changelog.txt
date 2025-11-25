@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 2025-11-25
+  Gui:
+    - Changed visual style of progressbars to eliminate black bars between segments. Fixed issue where tooltips in toolbar were not being displayed because of overlay text. Shoutout to Shemp for contributing code for both of these fixes.
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 2025-11-24
   Features:
