@@ -15,7 +15,15 @@ local styles = data.raw["gui-style"].default
 styles.inv_bar_segment = {
   type = "progressbar_style",
   padding = 0,
-  bar_width = 20
+  bar_width = 20,
+  bar = {
+    base = {
+        draw_type = "outer",
+        type = "composition",
+        position = {200, 80},
+        corner_size = 1,
+    }
+  }
 }
 
 styles.inv_bar_text = {

@@ -337,7 +337,7 @@ function create_segmented_inventory_bar(flow, full, partial, reserved, total, pl
   if res_w > 0 then build_segment(container, "seg_reserved", res_w, reserved .. " reserved (filtered)", reserved_color) end
   if free_w > 0 then build_segment(container, "seg_free", free_w, free .. " free", free_color) end
   local overlay_caption = player and format_overlay(player, full, partial, reserved, total) or ("F " .. full .. " P " .. partial .. " / " .. total .. " (R " .. reserved .. ")")
-  local overlay = container.add{ type = "label", name = "inventory_segments_label", caption = overlay_caption, style = "inv_bar_text" }
+  local overlay = container.add{ type = "label", name = "inventory_segments_label", caption = overlay_caption, style = "inv_bar_text", ignored_by_interaction = true }
   overlay.style.font_color = text_color
   overlay.style.left_margin = -BAR_WIDTH -- pull back to start
   overlay.style.width = BAR_WIDTH
