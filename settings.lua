@@ -54,6 +54,16 @@ data:extend({
     order = "z-a"
   }
   ,
+  -- Whether the inventory dialog should auto-hide when hovering over entities.
+  -- When ON, the dialog hides when you select an entity and shows when you deselect.
+  {
+    type = "bool-setting",
+    name = "inventory-gauge-auto-hide-on-hover",
+    setting_type = "runtime-per-user",
+    default_value = false,
+    order = "z-a2"
+  }
+  ,
   -- Per-player overlay text format. Supports tokens:
   -- %F full stacks, %P partial stacks, %R reserved (filtered) slots,
   -- %E empty free slots, %C total slots, %I percent filled (items), %% literal %.

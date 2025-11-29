@@ -95,10 +95,12 @@ end
 -- Function to destroy the dialog
 local function destroy_dialog(player)
   storage.dialog_auto_hide = storage.dialog_auto_hide or {}
+  storage.auto_hidden = storage.auto_hidden or {}
   if player.gui.screen.inventory_dialog then
     player.gui.screen.inventory_dialog.destroy()
   end
   storage.dialog_visible[player.index] = false
+  storage.auto_hidden[player.index] = false
 end
 
 local function update_progress_bar(player)
@@ -235,6 +237,40 @@ script.on_event(defines.events.on_gui_click, function(event)
   end
 end)
 
+-- Handle auto-hide when hovering over entities
+script.on_event(defines.events.on_selected_entity_changed, function(event)
+  local player = game.get_player(event.player_index)
+  if not player then return end
+  
+  -- Check if auto-hide is enabled for this player
+  local auto_hide_setting = player.mod_settings["inventory-gauge-auto-hide-on-hover"]
+  if not auto_hide_setting or not auto_hide_setting.value then return end
+  
+  -- Check if dialog is visible
+  if not storage.dialog_visible or not storage.dialog_visible[player.index] then return end
+  
+  local dialog = player.gui.screen.inventory_dialog
+  if not dialog then return end
+  
+  storage.auto_hidden = storage.auto_hidden or {}
+
+  -- If player is hovering over an entity, hide the dialog
+  if player.selected then
+    if not storage.auto_hidden[player.index] then
+      debug_log("Player " .. player.name .. " selected entity, auto-hiding dialog")
+      dialog.visible = false
+      storage.auto_hidden[player.index] = true
+    end
+  else
+    -- If player is not hovering over an entity, show the dialog
+    if storage.auto_hidden[player.index] then
+      debug_log("Player " .. player.name .. " deselected entity, showing dialog")
+      dialog.visible = true
+      storage.auto_hidden[player.index] = false
+    end
+  end
+end)
+
 -- Update progress bar when inventory changes
 local function on_inventory_changed(event)
   -- Instead of updating immediately (which can read a transient pre-consolidation state),
@@ -253,6 +289,7 @@ script.on_init(function()
   storage.dialog_visible = {}
   storage.pending_refresh = {}
   storage.window_positions = storage.window_positions or {}
+  storage.auto_hidden = {}
 end)
 
 -- Periodic refresh to catch non-item changes (e.g., slot filter adjustments)
