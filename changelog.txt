@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 2025-11-29
+  Features:
+    - Added support for new feature to auto-hide the window when hovering over an entity (like in the Expand Tooltip mod). Thanks to LabsJ for the feature suggestion.
+---------------------------------------------------------------------------------------------------
 Version: 1.2.1
 Date: 2025-11-25
   Gui:
